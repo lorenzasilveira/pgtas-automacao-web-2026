@@ -1,0 +1,17 @@
+{
+  "name": "pgtas-automacao-web-2026-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "cypress": "^13.7.3",
+    "cypress-mochawesome-reporter": "^5.0.0"
+  }
+}

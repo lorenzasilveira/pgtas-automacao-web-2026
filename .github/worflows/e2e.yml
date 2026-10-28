@@ -1,0 +1,61 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  cypress:
+    name: Executar testes Cypress
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes Cypress
+        id: cypress
+        continue-on-error: true
+        run: npx cypress run
+
+      - name: Publicar relatório como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-mochawesome
+          path: cypress/reports/html/
+          if-no-files-found: warn
+          retention-days: 15
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar arquivos para publicação
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: cypress/reports/html/
+
+      - name: Publicar relatório no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
